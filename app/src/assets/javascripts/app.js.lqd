@@ -37,7 +37,7 @@ class App extends React.Component {
   }
 
   isAuthenticated() {
-    return Auth.isUserAuthenticated() && this.state && this.state.current_user !== 'undefined'
+    return Auth.isUserAuthenticated() && this.state && typeof this.state.current_user !== 'undefined'
   }
 
   render() {
