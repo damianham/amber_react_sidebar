@@ -30,13 +30,13 @@ import { HashRouter } from 'react-router-dom';
 
 document.addEventListener('DOMContentLoaded', function() {
 
-  let componentEntry = document.getElementById("{{name}}_app");
-  if (componentEntry) {
+  let element = document.getElementById("{{name}}_app");
+  if (element) {
 		ReactDOM.render((
 			  <HashRouter>
 			    <App />
 			  </HashRouter>),
-		  document.getElementById("{{name}}_app")
+		 element)
 		);
   }
 });
