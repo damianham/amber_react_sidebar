@@ -171,11 +171,15 @@ export class {{class_name}}IndexList extends React.Component {
   }
 }
 
+{{class_name}}IndexList.propTypes = {
+  posts: PropTypes.object.isRequired,
+  delegate: PropTypes.object.isRequired
+};
+
 export class {{class_name}}IndexItem extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = props.{{name}}
   }
 
   delete(id, event) {
@@ -262,5 +266,9 @@ export class {{class_name}}IndexItem extends React.Component {
       </tr>
     )
   }
-
 }
+
+{{class_name}}IndexItem.propTypes = {
+  post: PropTypes.object.isRequired,
+  delegate: PropTypes.object.isRequired
+};
