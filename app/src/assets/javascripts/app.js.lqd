@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import {
   Link,
   NavLink,
@@ -17,25 +17,25 @@ class App extends React.Component {
   }
 
   authenticateWithToken(token) {
-    let vm = this;
-    let $ = window.$;
+    const vm = this;
+    const $ = window.$;
 
     $.ajax(
-      {
-        url: "/authenticateWithToken?token=" + token,
-        method: 'GET',
-        dataType: 'json'
-      })
-      .done(function (data) {
-        window.csrf_token = data.csrf;
-        Auth.authenticateUser(data.token, data.user);
-        vm.setState({ current_user: data.user });
-      })
-      .fail(function (data) {
-        console.log('error authenticating user with token', token, data)
-        Auth.deauthenticateUser();
-        window.location = "/signin";
-      })
+        {
+          url: '/authenticateWithToken?token=' + token,
+          method: 'GET',
+          dataType: 'json',
+        })
+        .done((data) => {
+          window.csrf_token = data.csrf;
+          Auth.authenticateUser(data.token, data.user);
+          vm.setState({current_user: data.user});
+        })
+        .fail((data) => {
+          console.log('error authenticating user with token', token, data);
+          Auth.deauthenticateUser();
+          window.location = '/signin';
+        });
   }
 
   authenticateWithRequest() {
@@ -43,21 +43,21 @@ class App extends React.Component {
     let $ = window.$;
 
     $.ajax(
-      {
-        url: "/me",
-        method: 'GET',
-        dataType: 'json'
-      })
-      .done(function (data) {
-        window.csrf_token = data.csrf;
-        Auth.authenticateUser(data.token, data.user);
-        vm.setState({ current_user: data.user });
-      })
-      .fail(function (data) {
-        console.log('error getting user', data);
-        Auth.deauthenticateUser();
-        window.location = "/signin";
-      })
+        {
+          url: '/me',
+          method: 'GET',
+          dataType: 'json',
+        })
+        .done((data) => {
+          window.csrf_token = data.csrf;
+          Auth.authenticateUser(data.token, data.user);
+          vm.setState({current_user: data.user});
+        })
+        .fail((data) => {
+          console.log('error getting user', data);
+          Auth.deauthenticateUser();
+          window.location = '/signin';
+        });
   }
 
   componentWillMount() {
@@ -69,12 +69,14 @@ class App extends React.Component {
   }
 
   isAuthenticated() {
-    return Auth.isUserAuthenticated() && this.state && typeof this.state.current_user !== 'undefined'
+    return Auth.isUserAuthenticated() &&
+      this.state &&
+      typeof this.state.current_user !== 'undefined';
   }
 
   signOut() {
     Auth.deauthenticateUser();
-    window.location = "/signout";
+    window.location = '/signout';
   }
 
   render() {
@@ -87,20 +89,20 @@ class App extends React.Component {
               <img src="/dist/images/logo.svg" height="30" alt="Amber logo" />
             </Link>
 
-              <ul className="navbar-nav mr-auto">
-                <li key={'/'} className="nav-item">
-                  <NavLink exact to="/" className="nav-link">Home</NavLink>
+            <ul className="navbar-nav mr-auto">
+              <li key={'/'} className="nav-item">
+                <NavLink exact to="/" className="nav-link">Home</NavLink>
+              </li>
+              { routes.filter((route) => route.path !== '/' && route.type === 'index').map((route, index) => (
+                <li key={route.path} className="nav-item">
+                  <NavLink className="nav-link" to={route.path}>{route.name}</NavLink>
                 </li>
-                { routes.filter(route => route.path !== '/' && route.type === 'index').map((route, index) => (
-                  <li key={route.path} className="nav-item">
-                    <NavLink className="nav-link" to={route.path}>{route.name}</NavLink>
-                  </li>
-                ))
-                }
+              ))
+              }
 
-              </ul>
+            </ul>
 
-              <ul className="navbar-nav">
+            <ul className="navbar-nav">
               { this.isAuthenticated() ? (
                   <li className="nav-item">
                     <a className='nav-link' href='/signout'>Sign Out</a>
@@ -121,7 +123,7 @@ class App extends React.Component {
                   </li>
                 )
               }
-              </ul>
+            </ul>
           </div>
         </nav>
 
@@ -132,37 +134,37 @@ class App extends React.Component {
                 <div className="col-sm-2 sidebar" >
                   <Sidebar />
                   <ul className="sidebar-links">
-                  { routes.filter(route => route.path !== '/' && route.type === 'index').map((route, index) => (
-                   // You can render a <Route> in as many places
-                   // as you want in your app. It will render along
-                   // with any other <Route>s that also match the URL.
-                   // So, a sidebar or breadcrumbs or anything else
-                   // that requires you to render multiple things
-                   // in multiple places at the same URL is nothing
-                   // more than multiple <Route>s.
-                   <li key={route.path} >
-                     <NavLink to={route.path}>{route.name}</NavLink>
-                   </li>
-                   ))
-                  }
+                    { routes.filter((route) => route.path !== '/' && route.type === 'index').map((route, index) => (
+                    // You can render a <Route> in as many places
+                    // as you want in your app. It will render along
+                    // with any other <Route>s that also match the URL.
+                    // So, a sidebar or breadcrumbs or anything else
+                    // that requires you to render multiple things
+                    // in multiple places at the same URL is nothing
+                    // more than multiple <Route>s.
+                      <li key={route.path} >
+                        <NavLink to={route.path}>{route.name}</NavLink>
+                      </li>
+                    ))
+                    }
 
                   </ul>
 
                   <div className="sidebar-component">
                     { routes.map((route, index) => (
-                     // You can render a <Route> in as many places
-                     // as you want in your app. It will render along
-                     // with any other <Route>s that also match the URL.
-                     // So, a sidebar or breadcrumbs or anything else
-                     // that requires you to render multiple things
-                     // in multiple places at the same URL is nothing
-                     // more than multiple <Route>s.
-                     <Route
-                       key={index}
-                       path={route.path}
-                       exact={route.exact}
-                       component={route.sidebar}
-                     />
+                    // You can render a <Route> in as many places
+                    // as you want in your app. It will render along
+                    // with any other <Route>s that also match the URL.
+                    // So, a sidebar or breadcrumbs or anything else
+                    // that requires you to render multiple things
+                    // in multiple places at the same URL is nothing
+                    // more than multiple <Route>s.
+                      <Route
+                        key={index}
+                        path={route.path}
+                        exact={route.exact}
+                        component={route.sidebar}
+                      />
                      ))
                     }
                   </div>
@@ -170,16 +172,16 @@ class App extends React.Component {
 
                 <div className="col-sm-10 main-content">
                   <Switch>
-                   {routes.map((route, index) => (
-                     // Render more <Route>s with the same paths as
-                     // above, but different components this time.
-                     <Route
-                       key={index}
-                       path={route.path}
-                       exact={route.exact}
-                       component={route.main}
-                     />
-                   ))}
+                    {routes.map((route, index) => (
+                    // Render more <Route>s with the same paths as
+                    // above, but different components this time.
+                      <Route
+                        key={index}
+                        path={route.path}
+                        exact={route.exact}
+                        component={route.main}
+                      />
+                    ))}
                   </Switch>
                 </div>
               </div>
