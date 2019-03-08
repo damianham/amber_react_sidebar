@@ -1,18 +1,17 @@
-import React from 'react';
+import React from 'react'
+import {Home} from '../../views/home/js/home'
 
-var routes = [];
+let routes = []
 
-export default routes;
+export default routes
 
-import { Home, HomeSidebar} from '../../views/home/js/home';
-
-routes.push(  {
-  path: "/",
+routes.push({
+  path: '/',
   exact: true,
   type: 'index',
   name: 'Home',
-  sidebar: HomeSidebar,
-  main: Home
-  });
+  main: Home,
+  icon: 'Home'
+})
 
 // append routes
