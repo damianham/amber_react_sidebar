@@ -172,7 +172,7 @@ export class {{class_name}}IndexList extends React.Component {
 }
 
 {{class_name}}IndexList.propTypes = {
-  posts: PropTypes.object.isRequired,
+  {{name | pluralize}}: PropTypes.object.isRequired,
   delegate: PropTypes.object.isRequired
 };
 
@@ -269,6 +269,6 @@ export class {{class_name}}IndexItem extends React.Component {
 }
 
 {{class_name}}IndexItem.propTypes = {
-  post: PropTypes.object.isRequired,
+  {{name}}: PropTypes.object.isRequired,
   delegate: PropTypes.object.isRequired
 };
