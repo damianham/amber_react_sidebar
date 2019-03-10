@@ -1,46 +1,45 @@
-import React from 'react';
-import Resource from '../../../lib/js/resource';
+import React from 'react'
+import Resource from '../../../lib/js/resource'
 
-export * from "./{{name}}_edit";
-export * from "./{{name}}_index";
-export * from "./{{name}}_new";
-export * from "./{{name}}_view";
+export * from './{{name}}_edit'
+export * from './{{name}}_index'
+export * from './{{name}}_new'
+export * from './{{name}}_view'
 
 export class {{class_name}}SidebarComponent extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
 
     this.state = this.props.location.state
   }
 
-  render() {
+  render () {
     return (
       <div id="{{name}}-sidebar-component sidebar-component">
         {{display_name}}
       </div>
-    );
+    )
   }
 }
 
 export class {{class_name}} extends Resource {
-  constructor( attributes) {
-    super("/{{name | pluralize}}", attributes);
-
+  constructor (attributes) {
+    super('/{{name | pluralize}}', attributes)
   }
 
   // client side validation
-  save() {
-    let errors = [];
+  save () {
+    let errors = []
 
     {% for field in visible_fields -%}
     {% if field.name != "user" -%}
     {% if field.type == "reference" -%}
     if (this.{{field.name}}_id === '') {
-    {{"  "}}errors.push({field: "{{field.name}}_id", value: this.{{field.name}}_id, message: "is required"})
+    {{"  "}}errors.push({ field: '{{field.name}}_id', value: this.{{field.name}}_id, message: 'is required' })
     }
     {% else -%}
     if (this.{{field.name}} === '') {
-    {{"  "}}errors.push({field: "{{field.name}}", value: this.{{field.name}}, message: "is required"})
+    {{"  "}}errors.push({ field: '{{field.name}}', value: this.{{field.name}}, message: 'is required' })
     }
     {% endif -%}
     {% endif -%}
@@ -60,5 +59,4 @@ export class {{class_name}} extends Resource {
     }
     return super.save()
   }
-
 }

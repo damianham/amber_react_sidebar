@@ -1,17 +1,17 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from "prop-types";
+import React from 'react'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-import {EventBus} from '../../../lib/js/eventBus';
-import {bestTitleForClass} from '../../../lib/js/utils';
-import {store} from '../../../lib/js/store';
+import { EventBus } from '../../../lib/js/eventBus'
+import { bestTitleForClass } from '../../../lib/js/utils'
+import { store } from '../../../lib/js/store'
 
-import { {{class_name}} } from './{{name}}';
+import { {{class_name}} } from './{{name}}'
 
 export class {{class_name}}Index extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
 
     this.state = {
       list: [],
@@ -21,50 +21,48 @@ export class {{class_name}}Index extends React.Component {
     this.toggleSort = this.toggleSort.bind(this)
   }
 
-  toggleSort(event) {
+  toggleSort (event) {
     this.sort(event)
   }
 
-  sort(event) {
-
-    if (event && typeof event === 'String') {
+  sort (event) {
+    if (event && typeof event === 'string') {
       // we were given the column to sort on as a string
-      if(this.state.sort_column === event) {
+      if (this.state.sort_column === event) {
         this.state.sort_direction = this.state.sort_direction === 'up' ? 'down' : 'up'
       }
       this.state.sort_column = event
     } else if (event && event.target) {
       // the sort column to sort on is the result of a click
-      if(this.state.sort_column === event.target.dataset.field) {
+      if (this.state.sort_column === event.target.dataset.field) {
         this.state.sort_direction = this.state.sort_direction === 'up' ? 'down' : 'up'
       }
       this.state.sort_column = event.target.dataset.field
     }
 
-    let vm = this;
+    let vm = this
 
-    let sorted = store.getState()["{{name}}"].slice().sort((a,b) => {
-      let a_val = a[vm.state.sort_column];
-      let b_val = b[vm.state.sort_column];
+    let sorted = store.getState()['{{name}}'].slice().sort((a, b) => {
+      let aVal = a[vm.state.sort_column]
+      let bVal = b[vm.state.sort_column]
 
-      if (a_val == b_val) {
+      if (aVal === bVal) {
         return 0
       }
-      if (a_val < b_val) {
+      if (aVal < bVal) {
         return vm.state.sort_direction === 'up' ? -1 : 1
       } else {
         return vm.state.sort_direction === 'up' ? 1 : -1
       }
-    });
+    })
 
-    this.setState({list: sorted})
+    this.setState({ list: sorted })
   }
 
-  componentWillMount() {
+  componentWillMount () {
+    let vm = this
 
-    let vm = this;
-
-    store.subscribe("{{name}}",  "/{{name | pluralize}}", (data) => {
+    store.subscribe('{{name}}', '/{{name | pluralize}}', (data) => {
       if (data) {
         vm.sort()
       }
@@ -72,18 +70,18 @@ export class {{class_name}}Index extends React.Component {
 
     EventBus.on('new:model:{{name}}', this.newListener = (model) => {
       vm.sort()
-    });
+    })
 
     EventBus.on('update:model:{{name}}', this.updateListener = (model) => {
       vm.sort()
-    });
+    })
 
     EventBus.on('delete:model:{{name}}', this.deleteListener = (model) => {
       vm.sort()
-    });
+    })
 
-    EventBus.on("cmd:delete:{{name}}", this.cmdListener = (id) => {
-      store.delete("{{name}}", id)
+    EventBus.on('cmd:delete:{{name}}', this.cmdListener = (id) => {
+      store.delete('{{name}}', id)
     })
 
     // subscribe to related data
@@ -91,40 +89,35 @@ export class {{class_name}}Index extends React.Component {
   {% if field.type == "reference" -%}
   {% if field.name != "user" -%}
 {{" "}}
-    store.subscribe("{{field.name}}",  "/{{field.name | pluralize}}", (data) => {
+    store.subscribe('{{field.name}}', '/{{field.name | pluralize}}', (data) => {
       if (data) {
         // trigger a re-render
         vm.sort()
       }
-    });
+    })
   {% endif -%}
   {% endif -%}
 {% endfor %}
   }
 
-  componentWillUnmount() {
-    EventBus.off('new:model:{{name}}', this.newListener);
-    EventBus.off('update:model:{{name}}', this.updateListener);
-    EventBus.off('delete:model:{{name}}', this.deleteListener);
-    EventBus.off("cmd:delete:{{name}}", this.cmdListener)
+  componentWillUnmount () {
+    EventBus.off('new:model:{{name}}', this.newListener)
+    EventBus.off('update:model:{{name}}', this.updateListener)
+    EventBus.off('delete:model:{{name}}', this.deleteListener)
+    EventBus.off('cmd:delete:{{name}}', this.cmdListener)
   }
 
-  render() {
+  render () {
     return (
       <{{class_name}}IndexList {{name | pluralize}}={this.state.list} delegate={this}/>
     )
   }
 }
 
-export default {{class_name}}Index;
+export default {{class_name}}Index
 
 export class {{class_name}}IndexList extends React.Component {
-  constructor(props) {
-    super(props)
-
-  }
-
-  render() {
+  render () {
     let clickHandler = this.props.delegate ? this.props.delegate.toggleSort : () =>{}
     return (
       <div>
@@ -143,15 +136,15 @@ export class {{class_name}}IndexList extends React.Component {
           <table className="table table-striped">
             <thead>
               <tr className="{{name}}-index.table-head-row index-table-head-row">
-              {% for field in visible_fields -%}
-              {% if field.name != "user" %}
+                {% for field in visible_fields -%}
+                {% if field.name != "user" -%}
                 <th className="{{name}}-index-table-head index-table-head"
-                {% if field.type != "reference" -%}
-                data-field="{{field.name}}" onClick={clickHandler}
+                  {% if field.type != "reference" -%}
+                  data-field="{{field.name}}" onClick={clickHandler}
                 {% endif -%}
                 >{{field.name | capitalize }}</th>
-              {% endif -%}
-              {% endfor %}
+                {% endif -%}
+                {% endfor %}
                 <th>Actions</th>
               </tr>
             </thead>
@@ -167,44 +160,39 @@ export class {{class_name}}IndexList extends React.Component {
           </table>
         </div>
       </div>
-    );
+    )
   }
 }
 
 {{class_name}}IndexList.propTypes = {
-  {{name | pluralize}}: PropTypes.object.isRequired,
-  delegate: PropTypes.object.isRequired
-};
+  {{name | pluralize}}: PropTypes.array.isRequired,
+  delegate: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.object,
+    PropTypes.func
+  ]).isRequired
+}
 
 export class {{class_name}}IndexItem extends React.Component {
-  constructor(props) {
-    super(props);
-
-  }
-
   delete(id, event) {
-    event.preventDefault();
+    event.preventDefault()
     if (id) {
       if (window.confirm('Are you sure you want to delete this {{name | capitalize}}?')) {
-        EventBus.emit('cmd:delete:{{name}}',  id)
+        EventBus.emit('cmd:delete:{{name}}', id)
       }
     }
   }
 
-  componentDidMount() {
+  render () {
+    const {{name}} = this.props.{{name}}
+    {% for field in visible_fields -%}
+    {% if field.type == "reference" -%}
+    {% if field.name != "user" -%}
+    const {{field.name}} = store.find('{{field.name}}', {{name}}.{{field.name}}_id)
+    {% endif -%}
+    {% endif -%}
+    {% endfor %}
 
-  }
-
-  render() {
-    const {{name}} = this.props.{{name}};
-{% for field in visible_fields -%}
-{% if field.type == "reference" -%}
-{% if field.name != "user" -%}
-{{"    "}}const {{field.name}} = store.find("{{field.name}}", {{name}}.{{field.name}}_id);
-{% endif -%}
-{% endif -%}
-{% endfor -%}
-{{" "}}
     return (
       <tr className="{{name}}-index-table-row index-table-row">
         {% for field in visible_fields -%}
@@ -213,55 +201,56 @@ export class {{class_name}}IndexItem extends React.Component {
         <td title="{{name}}-{{field.name}}" className="{{name}}-{{field.name}}-index-table-data {{name}}-index-table-data index-table-data">
           <Link role="{{name}}-{{field.name}}-link" to={
             {
-              pathname: "{{field.name | pluralize}}/show/" +{{name}}.{{field.name}}_id,
-              state:  {
+              pathname: '{{field.name | pluralize}}/show/' + {{name}}.{{field.name}}_id,
+              state: {
                 {{field.name}}: {{field.name}} || {}
-                }
+              }
             }
           }>
-          { bestTitleForClass({{field.name}} || {id: {{name}}.{{field.name}}_id}) }</Link>
-          </td>
+            { bestTitleForClass({{field.name}} || { id: {{name}}.{{field.name}}_id }) }</Link>
+        </td>
         {% else -%}
-          <td title="{{name}}-{{field.name}}" className="{{name}}-{{field.name}}-index-table-data {{name}}-index-table-data index-table-data">{ {{name}}.{{field.name}} }</td>
+        <td title="{{name}}-{{field.name}}" className="{{name}}-{{field.name}}-index-table-data {{name}}-index-table-data index-table-data">{ {{name}}.{{field.name}} }</td>
         {% endif -%}
         {% endif -%}
         {% endfor %}
         <td className="{{name}}-index-actions-column index-actions-column">
 
-        <Link className="{{name}}-index-actions-edit index-actions-edit"
-          role="{{name}}-edit"
-          to={
-          {
-            pathname: "/{{name | pluralize}}/edit/"+ {{name}}.id,
-            state: {{name}}
-          }
-
-        }><i className="material-icons">edit</i></Link>
-
-        <span className="{{name}}-index-actions-delete index-actions-delete"
-          role="{{name}}-delete"
-          onClick={this.delete.bind(this, {{name}}.id)}
-          >
-          <i className="material-icons">delete</i>
-        </span>
-
-        <Link className="{{name}}-index-actions-show index-actions-show"
-          role="{{name}}-show"
-          to={
-          {
-            pathname: "/{{name | pluralize}}/show/"+ {{name}}.id,
-            state: {
-              {% for field in visible_fields -%}
-              {% if field.type == "reference" -%}
-              {% if field.name != "user" %}
-              {{field.name}}: {{field.name}},
-              {% endif -%}
-              {% endif -%}
-              {% endfor %}
-              {{name}}: {{name}}
+          <Link className="{{name}}-index-actions-edit index-actions-edit"
+            role="{{name}}-edit"
+            to={
+              {
+                pathname: '/{{name | pluralize}}/edit/' + {{name}}.id,
+                state: {{name}}
+              }
             }
-          }
-        }><i className="material-icons">arrow_forward_ios</i></Link>
+          ><i className="material-icons">edit</i></Link>
+
+          <span className="{{name}}-index-actions-delete index-actions-delete"
+            role="{{name}}-delete"
+            onClick={this.delete.bind(this, {{name}}.id)}
+          >
+            <i className="material-icons">delete</i>
+          </span>
+
+          <Link className="{{name}}-index-actions-show index-actions-show"
+            role="{{name}}-show"
+            to={
+              {
+                pathname: '/{{name | pluralize}}/show/' + {{name}}.id,
+                state: {
+                  {% for field in visible_fields -%}
+                  {% if field.type == "reference" -%}
+                  {% if field.name != "user" %}
+                  {{field.name}}: {{field.name}},
+                  {% endif -%}
+                  {% endif -%}
+                  {% endfor %}
+                  {{name}}: {{name}}
+                }
+              }
+            }
+          ><i className="material-icons">arrow_forward_ios</i></Link>
         </td>
       </tr>
     )
@@ -270,5 +259,9 @@ export class {{class_name}}IndexItem extends React.Component {
 
 {{class_name}}IndexItem.propTypes = {
   {{name}}: PropTypes.object.isRequired,
-  delegate: PropTypes.object.isRequired
-};
+  delegate: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.object,
+    PropTypes.func
+  ]).isRequired
+}

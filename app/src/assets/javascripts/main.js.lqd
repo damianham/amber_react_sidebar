@@ -1,11 +1,11 @@
-import 'bootstrap';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './app';
-import jQuery from 'jquery';
-window.$ = window.jQuery = jQuery;
+import 'bootstrap'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './app'
+import jQuery from 'jquery'
+window.$ = window.jQuery = jQuery
 
-import toastr from './toastr';
+import toastr from './toastr'
 toastr.options = {
   'closeButton': true,
   'debug': false,
@@ -23,20 +23,18 @@ toastr.options = {
   'showMethod': 'fadeIn',
   'hideMethod': 'fadeOut',
 }
-window.toastr = toastr;
+window.toastr = toastr
 
-import {HashRouter} from 'react-router-dom';
+import {HashRouter} from 'react-router-dom'
 
-document.addEventListener('DOMContentLoaded', function() {
-  const element = document.getElementById('materialapp_app');
+document.addEventListener('DOMContentLoaded', function () {
+  const element = document.getElementById('{{name}}_app')
   if (element) {
     ReactDOM.render((
       <HashRouter>
-        <MuiThemeProvider theme={theme}>
           <App />
-        </MuiThemeProvider>
       </HashRouter>),
     element
-    );
+    )
   }
-});
+})
