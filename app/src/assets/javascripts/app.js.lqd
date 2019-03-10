@@ -26,12 +26,12 @@ class App extends React.Component {
           method: 'GET',
           dataType: 'json',
         })
-        .done((data) => {
+        .then((data) => {
           window.csrf_token = data.csrf;
           Auth.authenticateUser(data.token, data.user);
           vm.setState({current_user: data.user});
         })
-        .fail((data) => {
+        .catch((data) => {
           console.log('error authenticating user with token', token, data);
           Auth.deauthenticateUser();
           window.location = '/signin';
@@ -48,12 +48,12 @@ class App extends React.Component {
           method: 'GET',
           dataType: 'json',
         })
-        .done((data) => {
+        .then((data) => {
           window.csrf_token = data.csrf;
           Auth.authenticateUser(data.token, data.user);
           vm.setState({current_user: data.user});
         })
-        .fail((data) => {
+        .catch((data) => {
           console.log('error getting user', data);
           Auth.deauthenticateUser();
           window.location = '/signin';
