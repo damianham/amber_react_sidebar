@@ -54,7 +54,7 @@ export class {{class_name}}View extends React.Component {
       let related = store.related('related', '{{name}}_id', this.state.{{name}}.id);
 
       if (typeof related.catch === 'function') {
-        related.catch((error, statusText) => {
+        related.catch((response, statusText, error) => {
           store.handleErrors('Show', 'related', statusText, error)
         })
       } else {
@@ -73,9 +73,9 @@ export class {{class_name}}View extends React.Component {
         if (response.data) {
           vm.setState({ comments: response.data})
         }
-      }).catch((error, statusText) => {
+      }).catch((response, statusText, error) => {
         console.log('store load resources failed with', error);
-        store.handleErrors('Query', 'comment', statusText, error);
+        store.handleErrors('Query', 'comment', error, response.responseJSON);
       });
     */
   }
