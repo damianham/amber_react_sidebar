@@ -21,7 +21,7 @@ dependencies:
     #branch: master
     version: {{ amber_version }}
 
- granite:
+  granite:
     github: amberframework/granite
     version: ~> 0.20.0
 
